@@ -1,0 +1,611 @@
+{
+  "info": {
+    "_postman_id": "31d9b7a5-0700-4a0c-b7ac-d0b2e87ee3a1",
+    "name": "fakeapi.platzi",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "31523672"
+  },
+  "item": [
+    {
+      "name": "Product CRUD",
+      "item": [
+        {
+          "name": "Get All Products",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "//Check the request status code",
+                  "pm.test('Status code is 200, request is successful', function(){",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "//Check the response headers ",
+                  "pm.test(\"Access-control-allow-origin header is present in response\", function () {",
+                  "    pm.response.to.have.header(\"access-control-allow-origin\");",
+                  "});",
+                  "",
+                  "//Check the response headers ",
+                  "pm.test(\"Content-Type is present in response and has value application/json\", ()=> {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+                  "});",
+                  "//Check the response body content",
+                  "pm.test(\"Response body has a correct structure\", function () {",
+                  "    let responseData = pm.response.json();",
+                  "    responseData.forEach(function (product) { ",
+                  "        pm.expect(product).to.include.keys([",
+                  "            \"id\",",
+                  "            \"title\",",
+                  "            \"slug\",",
+                  "            \"price\",",
+                  "            \"description\",",
+                  "            \"category\",",
+                  "            \"images\",",
+                  "            \"creationAt\",",
+                  "            \"updatedAt\",",
+                  "        ]);",
+                  "    });",
+                  "});",
+                  "//Test if the response has a valid data type and format",
+                  "pm.test(\"Validate data type and format of the response\", function () {",
+                  "    let jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an(\"array\").and.not.to.be.empty;",
+                  "    jsonData.forEach(function (product) {",
+                  "        pm.expect(product.id).to.be.a(\"number\").and.to.be.above(-1);",
+                  "        pm.expect(product.title).to.be.a(\"string\").and.not.to.be.empty;",
+                  "        pm.expect(product.price).to.be.a(\"number\").and.to.be.above(0);",
+                  "        pm.expect(product.slug).to.be.a(\"string\").and.not.to.be.empty;",
+                  "        pm.expect(product.description).to.be.a(\"string\");",
+                  "        pm.expect(product.images).to.be.an(\"array\");",
+                  "        pm.expect(product.creationAt).to.be.a(\"string\").and.not.to.be.empty;",
+                  "        pm.expect(product.updatedAt).to.be.a(\"string\").and.not.to.be.empty;",
+                  "    });",
+                  "});",
+                  "//Test the response time",
+                  "pm.test(\"Response time is less than 2000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "});",
+                  "",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{basicUrl}}/products",
+              "host": ["{{basicUrl}}"],
+              "path": ["products"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product By ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "//Check the request status code\r",
+                  "pm.test('Status code is 200, request is successful', function(){\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "//Check the response headers \r",
+                  "pm.test('Content-Type is present in response and has value application/json', ()=> {\r",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+                  "});\r",
+                  "//Product id can not be null\r",
+                  "pm.test(\"Product id can not be null\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.id).to.not.be.null;\r",
+                  "    pm.expect(jsonData.id).to.not.eql(0);\r",
+                  "    pm.expect(jsonData.id).to.not.eql(NaN);\r",
+                  "});\r",
+                  "//Validate the response body id value\r",
+                  "pm.test('Response body has correct product id', () => {\r",
+                  "    const jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData).to.be.an('object').and.not.to.be.empty;\r",
+                  "    pm.expect(jsonData).to.have.property('id', 97);\r",
+                  "});\r",
+                  "//Validate the product slug\r",
+                  "pm.test('Response product slug is correct', () => {\r",
+                  "    const jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData).to.have.property('slug');\r",
+                  "    pm.expect(jsonData.slug).to.equal('senior-response-facilitator');\r",
+                  "});\r",
+                  "//Test the response time\r",
+                  "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{basicUrl}}/products/179",
+              "host": ["{{basicUrl}}"],
+              "path": ["products", "179"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product By Slug",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "//Check the request status code\r",
+                  "pm.test('Status code is 200, request is successful', function(){\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "//Check the response headers \r",
+                  "pm.test(\"Content-Type is present in response and has value application/json\", ()=> {\r",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+                  "});\r",
+                  "//Validate the product slug\r",
+                  "pm.test('Response product slug is correct', () => {\r",
+                  "    const jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData).to.have.property('slug');\r",
+                  "    pm.expect(jsonData.slug).to.equal('senior-response-facilitator');\r",
+                  "});\r",
+                  "//Test the response time\r",
+                  "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{basicUrl}}/products/slug/new-product",
+              "host": ["{{basicUrl}}"],
+              "path": ["products", "slug", "senior-response-facilitator"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create New Product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "//Check the request status code\r",
+                  "pm.test('Status code is 201 Created, request is successful', function(){\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "//Check the response headers \r",
+                  "pm.test(\"Content-Type is present in response and has value application/json\", ()=> {\r",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+                  "});\r",
+                  "//Create collection variables with the response data\r",
+                  "const jsonResponseData = pm.response.json();\r",
+                  "pm.collectionVariables.set(\"product_id\", jsonResponseData.id);\r",
+                  "pm.collectionVariables.set(\"product_title\", jsonResponseData.title);\r",
+                  "pm.collectionVariables.set(\"product_slug\", jsonResponseData.slug);\r",
+                  "pm.collectionVariables.set(\"product_price\", jsonResponseData.price);\r",
+                  "pm.collectionVariables.set(\"product_description\", jsonResponseData.description);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"title\": \"{{$randomCatchPhrase}}\",\r\n  \"price\": 799.99,\r\n  \"description\": \"This is a new product. It is the best\",\r\n  \"categoryId\": 1,\r\n  \"images\": [\"https://placehold.co/600x400\"]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{basicUrl}}/products",
+              "host": ["{{basicUrl}}"],
+              "path": ["products"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Check The Created Product Info",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "//Check the request status code\r",
+                  "pm.test('Status code is 200, request is successful', function(){\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "//Check the response headers \r",
+                  "pm.test(\"Content-Type is present in response and has value application/json\", ()=> {\r",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+                  "});\r",
+                  "// test the response body using variables from Create Product request!"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{basicUrl}}/products/{{product_id}}",
+              "host": ["{{basicUrl}}"],
+              "path": ["products", "{{product_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Product Info",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "//Check the request status code\r",
+                  "pm.test('Status code is 200, request is successful', function(){\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "//Check the response headers \r",
+                  "pm.test(\"Content-Type is present in response and has value application/json\", ()=> {\r",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"title\": \"New title asdf product\",\r\n  \"price\": 200,\r\n  \"description\": \"string\",\r\n  \"categoryId\": 0,\r\n  \"images\": [\r\n    \"https://placehold.co/600x400\"\r\n  ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{basicUrl}}/products/{{product_id}}",
+              "host": ["{{basicUrl}}"],
+              "path": ["products", "{{product_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Check The Updated Product Info",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "//Check the request status code\r",
+                  "pm.test('Status code is 200, request is successful', function(){\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "//Check the response headers \r",
+                  "pm.test(\"Content-Type is present in response and has value application/json\", ()=> {\r",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+                  "});// test the response body using variables from Update Product request!"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{basicUrl}}/products/{{product_id}}",
+              "host": ["{{basicUrl}}"],
+              "path": ["products", "{{product_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get The Products With Pagination",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "//Check the request status code\r",
+                  "pm.test('Status code is 200, request is successful', function(){\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "//Check the response headers \r",
+                  "pm.test(\"Content-Type is present in response and has value application/json\", ()=> {\r",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{basicUrl}}/products?offset=0&limit=10",
+              "host": ["{{basicUrl}}"],
+              "path": ["products"],
+              "query": [
+                {
+                  "key": "offset",
+                  "value": "0"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Related Products By ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "//Check the request status code\r",
+                  "pm.test('Status code is 200, request is successful', function(){\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "//Check the response headers \r",
+                  "pm.test(\"Content-Type is present in response and has value application/json\", ()=> {\r",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{basicUrl}}/products/{{product_id}}/related",
+              "host": ["{{basicUrl}}"],
+              "path": ["products", "{{product_id}}", "related"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Product By ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "//Check the request status code\r",
+                  "pm.test('Status code is 200, request is successful', function(){\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "//Check the response headers \r",
+                  "pm.test(\"Content-Type is present in response and has value application/json\", ()=> {\r",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('text/html; charset=utf-8');\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{basicUrl}}/products/{{product_id}}",
+              "host": ["{{basicUrl}}"],
+              "path": ["products", "{{product_id}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Filter Products",
+      "item": [
+        {
+          "name": "Create New Product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "//Check the request status code\r",
+                  "pm.test('Status code is 201 Created, request is successful', function(){\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "//Check the response headers \r",
+                  "pm.test(\"Content-Type is present in response and has value application/json\", ()=> {\r",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+                  "});\r",
+                  "//Create collection variables with the response data\r",
+                  "const jsonResponseData = pm.response.json();\r",
+                  "pm.collectionVariables.set(\"product_id\", jsonResponseData.id);\r",
+                  "pm.collectionVariables.set(\"product_title\", jsonResponseData.title);\r",
+                  "pm.collectionVariables.set(\"product_slug\", jsonResponseData.slug);\r",
+                  "pm.collectionVariables.set(\"product_price\", jsonResponseData.price);\r",
+                  "pm.collectionVariables.set(\"product_description\", jsonResponseData.description);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"title\": \"randomBankAccountName\",\r\n  \"price\": 799.99,\r\n  \"description\": \"This is a new product. It is the best\",\r\n  \"categoryId\": 1,\r\n  \"images\": [\"https://placehold.co/600x400\"]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{basicUrl}}/products",
+              "host": ["{{basicUrl}}"],
+              "path": ["products"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filter by Title",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "//Check the request status code\r",
+                  "pm.test('Status code is 200 OK, request is successful', function(){\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "//Validate response product_title\r",
+                  "pm.test('Product has the expected title', () => {\r",
+                  "    const jsonData = pm.response.json();\r",
+                  "pm.expect(jsonData[0].title).to.eql(pm.collectionVariables.get('product_title'));\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://api.escuelajs.co/api/v1/products/?title={{product_title}}",
+              "protocol": "https",
+              "host": ["api", "escuelajs", "co"],
+              "path": ["api", "v1", "products", ""],
+              "query": [
+                {
+                  "key": "title",
+                  "value": "{{product_title}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filter by Price",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "Filter by Price Range",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "Filter by Category",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "!invalid filters",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "basicUrl",
+      "value": "https://api.escuelajs.co/api/v1"
+    },
+    {
+      "key": "product_id",
+      "value": ""
+    },
+    {
+      "key": "product_title",
+      "value": ""
+    },
+    {
+      "key": "product_slug",
+      "value": ""
+    },
+    {
+      "key": "product_price",
+      "value": ""
+    },
+    {
+      "key": "product_description",
+      "value": ""
+    }
+  ]
+}
